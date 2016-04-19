@@ -1,5 +1,11 @@
 import os
 import sys
+import time
+
+
+# args
+target_sum = 0
+poms = []
 
 
 # path validate
@@ -13,6 +19,8 @@ def do_clean(path):
 
 
 def recursion_clean(root_path):
+    print root_path
+
     if not is_path_dir(root_path):
         return
 
@@ -20,9 +28,12 @@ def recursion_clean(root_path):
 
     if "pom.xml" in list:
         do_clean(root_path)
+        global target_sum, poms
+        target_sum += 1
+        poms.append(root_path + "/pom.xml")
 
     for file_name in list:
-        recursion_clean(file_name)
+        recursion_clean(root_path + "/" + file_name)
 
 
 def exit_with_msg(msg):
@@ -39,8 +50,18 @@ def env_validate():
 
 
 # begin
+begin_time = time.time()
+
 env_validate()
 
 recursion_clean(sys.argv[1])
 
-print "done"
+end_time = time.time()
+
+for pom in poms:
+    print(pom)
+
+print "\n\ndone"
+print "[ last ]: %s sec" % (end_time - begin_time)
+print "find pom.xml : %s" % target_sum
+print "exit"
