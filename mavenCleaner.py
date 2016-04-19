@@ -8,7 +8,7 @@ def is_path_dir(path):
 
 
 def do_clean(path):
-    cmd = "mvn clean"
+    cmd = "cd %s ; mvn clean" % path
     os.system(cmd)
 
 
@@ -41,6 +41,6 @@ def env_validate():
 # begin
 env_validate()
 
-recursion_clean(sys.argv[0])
+recursion_clean(sys.argv[1])
 
 print "done"
