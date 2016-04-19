@@ -18,13 +18,24 @@ def do_clean(path):
     os.system(cmd)
 
 
+# fix no permission problem
+def ls(path):
+    list = []
+    try:
+        list = os.listdir(path)
+    except Exception :
+        print("no permission for path:[%s]" % path)
+
+    return list
+
+
 def recursion_clean(root_path):
     print root_path
 
     if not is_path_dir(root_path):
         return
 
-    list = os.listdir(root_path)
+    list = ls(root_path)
 
     if "pom.xml" in list:
         do_clean(root_path)
@@ -33,7 +44,9 @@ def recursion_clean(root_path):
         poms.append(root_path + "/pom.xml")
 
     for file_name in list:
-        recursion_clean(root_path + "/" + file_name)
+        # special case for root path
+        parent_path = "" if root_path == "/" else root_path
+        recursion_clean(parent_path + "/" + file_name)
 
 
 def exit_with_msg(msg):
